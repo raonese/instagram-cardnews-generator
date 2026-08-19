@@ -207,7 +207,13 @@ document.querySelectorAll('.view-tab').forEach(button => button.addEventListener
 }));
 
 function downloadCanvas(source, filename) { const link = document.createElement('a'); link.download = filename; link.href = source.toDataURL('image/png'); link.click(); }
-document.querySelector('#downloadCard').addEventListener('click', () => { downloadCanvas(canvas, `card-${cards.findIndex(c => c.id === selectedId) + 1}.png`); showToast('PNG 저장을 시작했어요.'); });
+function downloadCurrentCard() {
+  const pageNumber = cards.findIndex(card => card.id === selectedId) + 1;
+  downloadCanvas(canvas, `card-${String(pageNumber).padStart(2, '0')}.png`);
+  showToast(`${pageNumber}페이지 PNG 저장을 시작했어요.`);
+}
+document.querySelector('#downloadCard').addEventListener('click', downloadCurrentCard);
+document.querySelector('#downloadCurrentTop').addEventListener('click', downloadCurrentCard);
 document.querySelector('#downloadAll').addEventListener('click', async () => {
   for (let i = 0; i < cards.length; i++) {
     const output = document.createElement('canvas'); output.width = 1080; output.height = ratio === 'square' ? 1080 : 1350;

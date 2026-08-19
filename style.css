@@ -9,7 +9,8 @@
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; min-width: 1100px; min-height: 100vh; overflow: hidden; }
+html { min-height: 100%; scroll-behavior: smooth; }
+body { margin: 0; min-width: 0; min-height: 100vh; overflow: auto; }
 button, input, textarea { font: inherit; }
 button { cursor: pointer; }
 
@@ -27,7 +28,7 @@ button { cursor: pointer; }
 .ghost-button { background: transparent; color: #64616d; }
 .danger { color: #d8495a; }
 
-.workspace { display: grid; grid-template-columns: 290px minmax(540px, 1fr) 350px; height: calc(100vh - 72px); }
+.workspace { display: grid; grid-template-columns: 290px minmax(540px, 1fr) 350px; height: calc(100vh - 72px); min-height: 620px; }
 .sidebar { background: white; overflow-y: auto; }
 .cards-panel { padding: 25px 18px; border-right: 1px solid var(--border); }
 .design-panel { padding: 25px 23px 40px; border-left: 1px solid var(--border); }
@@ -49,13 +50,13 @@ button { cursor: pointer; }
 .card-caption span { color: #8b8994; font-size: 11px; margin-top: 3px; }
 .add-card-button { width: 100%; margin-top: 15px; padding: 12px; border: 1px dashed #cfcbdc; border-radius: 11px; background: #faf9fc; color: #716d7c; font-weight: 700; }
 
-.preview-area { min-width: 0; padding: 21px 30px 25px; display: flex; flex-direction: column; align-items: center; overflow: hidden; background: #f6f6f9; }
+.preview-area { min-width: 0; min-height: 0; padding: 21px 30px 25px; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; overflow-y: auto; scrollbar-gutter: stable; background: #f6f6f9; }
 .preview-toolbar { width: min(100%, 690px); display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
 .view-tabs { display: flex; gap: 4px; padding: 4px; border-radius: 10px; background: #eae9ef; }
 .view-tab { border: 0; border-radius: 7px; background: transparent; color: #77747f; padding: 7px 11px; font-size: 12px; font-weight: 700; }
 .view-tab.active { background: white; color: #25232b; box-shadow: 0 2px 5px rgba(30,27,40,.08); }
 .zoom-control { color: #96939e; font-size: 12px; }.zoom-control strong { color: #4e4b56; margin-left: 5px; }
-.canvas-shell { flex: 1; min-height: 0; max-width: 690px; width: 100%; display: grid; place-items: center; }
+.canvas-shell { flex: 0 0 auto; height: max(480px, calc(100vh - 245px)); max-width: 690px; width: 100%; display: grid; place-items: center; }
 #mainCanvas { display: block; max-width: 100%; max-height: 100%; background: white; border-radius: 4px; box-shadow: 0 20px 50px rgba(28,24,44,.14); }
 .canvas-actions { display: flex; align-items: center; gap: 8px; margin-top: 17px; }
 .canvas-meta { width: min(100%, 690px); display: flex; justify-content: space-between; margin-top: 11px; color: #8d8996; font-size: 11px; font-weight: 600; }
@@ -95,4 +96,28 @@ input[type="color"] { display: block; width: 100%; height: 40px; margin-top: 7px
 @media (max-width: 1250px) {
   .workspace { grid-template-columns: 245px minmax(470px, 1fr) 320px; }
   .preview-area { padding-left: 20px; padding-right: 20px; }
+}
+
+@media (max-width: 1000px) {
+  body { overflow: auto; }
+  .topbar { position: sticky; top: 0; }
+  .workspace { display: flex; flex-direction: column; height: auto; min-height: 0; }
+  .sidebar { overflow: visible; }
+  .cards-panel { border-right: 0; border-bottom: 1px solid var(--border); }
+  .card-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .preview-area { min-height: 720px; overflow: visible; }
+  .canvas-shell { height: min(68vh, 680px); min-height: 480px; }
+  .design-panel { border-left: 0; border-top: 1px solid var(--border); }
+}
+
+@media (max-width: 600px) {
+  .topbar { height: auto; min-height: 64px; padding: 12px 15px; }
+  .brand { font-size: 16px; }
+  .ghost-button { display: none; }
+  .primary-button, .secondary-button { padding: 9px 10px; font-size: 11px; }
+  .preview-area { min-height: 600px; padding: 16px 12px 22px; }
+  .canvas-shell { height: 58vh; min-height: 390px; }
+  .canvas-actions { flex-wrap: wrap; justify-content: center; }
+  .canvas-meta { padding: 0 4px; }
+  .design-panel, .cards-panel { padding-left: 15px; padding-right: 15px; }
 }
