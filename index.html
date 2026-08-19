@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#5b46f1" />
+    <title>카드뉴스 메이커</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="카드뉴스 메이커 홈">
+        <span class="brand-mark">C</span><span>카드뉴스 메이커</span>
+      </a>
+      <div class="top-actions">
+        <button class="ghost-button" id="resetProject">초기화</button>
+        <button class="primary-button" id="downloadAll">전체 PNG 저장</button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="sidebar cards-panel">
+        <div class="panel-heading">
+          <div>
+            <span class="eyebrow">PROJECT</span>
+            <input id="projectTitle" class="project-title" value="나의 카드뉴스" aria-label="프로젝트 제목" />
+          </div>
+          <button class="icon-button" id="addCard" title="카드 추가" aria-label="카드 추가">＋</button>
+        </div>
+        <div class="list-meta"><span>카드 목록</span><span id="cardCount">3장</span></div>
+        <div id="cardList" class="card-list"></div>
+        <button class="add-card-button" id="addCardBottom">＋ 새 카드 추가</button>
+      </aside>
+
+      <section class="preview-area">
+        <div class="preview-toolbar">
+          <div class="view-tabs">
+            <button class="view-tab" data-ratio="square">정사각형 1:1</button>
+            <button class="view-tab active" data-ratio="portrait">세로형 4:5</button>
+          </div>
+          <div class="zoom-control"><span>미리보기</span><strong id="zoomLabel">64%</strong></div>
+        </div>
+        <div class="canvas-shell">
+          <canvas id="mainCanvas" width="1080" height="1080"></canvas>
+        </div>
+        <div class="canvas-meta"><span id="canvasSize">1080 × 1350 px · Instagram 세로형</span><span id="cardPosition">1 / 3 카드</span></div>
+        <div class="canvas-actions">
+          <button class="secondary-button" id="previousCard">← 이전</button>
+          <button class="secondary-button" id="duplicateCard">복제</button>
+          <button class="secondary-button danger" id="deleteCard">삭제</button>
+          <button class="secondary-button" id="nextCard">다음 →</button>
+          <button class="primary-button" id="downloadCard">현재 카드 PNG 저장</button>
+        </div>
+      </section>
+
+      <aside class="sidebar design-panel">
+        <div class="design-header">
+          <div><span class="eyebrow">EDITOR</span><h2>디자인</h2></div>
+          <span class="saved-state">● 자동 저장</span>
+        </div>
+
+        <div class="control-section">
+          <label class="section-label">배경 이미지</label>
+          <label class="upload-box" for="imageUpload">
+            <span class="upload-icon">↥</span>
+            <span><strong>이미지 업로드</strong><small>JPG, PNG · 최대 10MB</small></span>
+          </label>
+          <input id="imageUpload" type="file" accept="image/png,image/jpeg,image/webp" hidden />
+          <div class="image-actions">
+            <label class="mini-button" for="imageUpload">이미지 바꾸기</label>
+            <button class="mini-button danger" id="removeImage">이미지 제거</button>
+          </div>
+        </div>
+
+        <div class="control-section">
+          <label class="section-label">템플릿</label>
+          <div class="template-grid" id="templateControl">
+            <button data-value="gradient"><i class="template-preview gradient"></i><span>그라디언트</span></button>
+            <button data-value="box"><i class="template-preview box"></i><span>박스</span></button>
+            <button data-value="minimal"><i class="template-preview minimal"></i><span>미니멀</span></button>
+            <button data-value="outline"><i class="template-preview outline"></i><span>외곽선</span></button>
+          </div>
+        </div>
+
+        <div class="control-section">
+          <label class="section-label" for="titleText">제목</label>
+          <textarea id="titleText" rows="2" maxlength="80"></textarea>
+          <label class="section-label compact" for="bodyText">본문</label>
+          <textarea id="bodyText" rows="3" maxlength="180"></textarea>
+          <label class="section-label compact" for="badgeText">배지 텍스트</label>
+          <input id="badgeText" type="text" maxlength="24" placeholder="예: NEW, TIP" />
+        </div>
+
+        <div class="control-section">
+          <label class="section-label">텍스트 위치</label>
+          <div class="segmented" id="positionControl">
+            <button data-value="top">상단</button><button data-value="center">중앙</button><button data-value="bottom">하단</button>
+          </div>
+          <label class="section-label compact">정렬</label>
+          <div class="segmented" id="alignControl">
+            <button data-value="left">왼쪽</button><button data-value="center">가운데</button><button data-value="right">오른쪽</button>
+          </div>
+        </div>
+
+        <div class="control-section sliders">
+          <label>제목 크기 <strong id="titleSizeValue"></strong><input id="titleSize" type="range" min="42" max="110" step="2" /></label>
+          <label>본문 크기 <strong id="bodySizeValue"></strong><input id="bodySize" type="range" min="22" max="58" step="2" /></label>
+          <label>오버레이 진하기 <strong id="overlayValue"></strong><input id="overlayOpacity" type="range" min="0" max="80" /></label>
+        </div>
+
+        <div class="control-section colors-grid">
+          <label>글자 색상<input id="textColor" type="color" /></label>
+          <label>포인트 색상<input id="accentColor" type="color" /></label>
+          <label>오버레이 색상<input id="overlayColor" type="color" /></label>
+          <label>배경 색상<input id="backgroundColor" type="color" /></label>
+        </div>
+      </aside>
+    </main>
+
+    <div class="toast" id="toast" role="status"></div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
