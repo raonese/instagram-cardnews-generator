@@ -1,6 +1,7 @@
 const canvas = document.querySelector('#mainCanvas');
 const ctx = canvas.getContext('2d');
 const cardList = document.querySelector('#cardList');
+const canvasShell = document.querySelector('.canvas-shell');
 
 const starterCards = [
   { title: '여름, 비건으로\n달콤하게', body: '시원하고 달콤한 한입으로 시작하는 새로운 계절', badge: 'NEW SEASON', bg: '#ef9f74', accent: '#ffdc67' },
@@ -120,7 +121,26 @@ function renderMain() {
   renderCard(ctx, selected(), canvas.width, canvas.height);
   document.querySelector('#canvasSize').textContent = ratio === 'square' ? '1080 × 1080 px · Instagram 정사각형' : '1080 × 1350 px · Instagram 세로형';
   document.querySelector('#cardPosition').textContent = `${cards.findIndex(card => card.id === selectedId) + 1} / ${cards.length} 카드`;
-  requestAnimationFrame(updateZoom);
+  requestAnimationFrame(fitPreview);
+}
+
+function fitPreview() {
+  const availableWidth = canvasShell.clientWidth;
+  const availableHeight = canvasShell.clientHeight;
+  if (!availableWidth || !availableHeight) return;
+
+  const canvasRatio = canvas.width / canvas.height;
+  let displayWidth = availableWidth;
+  let displayHeight = displayWidth / canvasRatio;
+
+  if (displayHeight > availableHeight) {
+    displayHeight = availableHeight;
+    displayWidth = displayHeight * canvasRatio;
+  }
+
+  canvas.style.width = `${Math.floor(displayWidth)}px`;
+  canvas.style.height = `${Math.floor(displayHeight)}px`;
+  updateZoom();
 }
 
 function renderList() {
@@ -243,5 +263,6 @@ document.querySelector('#projectTitle').addEventListener('input', saveProject);
 let toastTimer;
 function showToast(message) { const toast = document.querySelector('#toast'); toast.textContent = message; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 2200); }
 function updateZoom() { document.querySelector('#zoomLabel').textContent = `${Math.round(canvas.getBoundingClientRect().width / canvas.width * 100)}%`; }
-window.addEventListener('resize', updateZoom);
+window.addEventListener('resize', fitPreview);
+new ResizeObserver(fitPreview).observe(canvasShell);
 loadProject(); refresh();
